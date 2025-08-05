@@ -1,0 +1,7 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/nikhilr/Documents/vscode/python/manim/my-project/media/videos/main/720p30/partial_movie_files/DefaultTemplate/2016333726_2308630894_223132457.mp4'
+file 'file:/home/nikhilr/Documents/vscode/python/manim/my-project/media/videos/main/720p30/partial_movie_files/DefaultTemplate/543634251_787465204_3565354554.mp4'
+file 'file:/home/nikhilr/Documents/vscode/python/manim/my-project/media/videos/main/720p30/partial_movie_files/DefaultTemplate/543634251_2408024828_2801359412.mp4'
+file 'file:/home/nikhilr/Documents/vscode/python/manim/my-project/media/videos/main/720p30/partial_movie_files/DefaultTemplate/543634251_190021707_947810970.mp4'
+file 'file:/home/nikhilr/Documents/vscode/python/manim/my-project/media/videos/main/720p30/partial_movie_files/DefaultTemplate/543634251_3724295730_1666280314.mp4'
+file 'file:/home/nikhilr/Documents/vscode/python/manim/my-project/media/videos/main/720p30/partial_movie_files/DefaultTemplate/543634251_2015106682_2878065840.mp4'
