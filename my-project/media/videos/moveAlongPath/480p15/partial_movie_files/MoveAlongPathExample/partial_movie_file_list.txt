@@ -1,0 +1,2 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/nikhilr/Github/manimProjects/my-project/media/videos/moveAlongPath/480p15/partial_movie_files/MoveAlongPathExample/1185818338_3483404458_298908622.mp4'

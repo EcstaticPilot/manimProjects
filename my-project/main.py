@@ -27,7 +27,7 @@ class DefaultTemplate(Scene):
         name = Text("Made by Nikhil Ramanuja").shift(DOWN*3)
         self.play(Write(name))
         self.pause(2)
-        self.play(FadeOut(title), FadeOut(name))
+        self.play(FadeOut(title,name))
         self.pause(1)
         
         robotBody = Rectangle(height = 3, width=1.5).set_fill(GRAY,opacity=0.25)
@@ -45,10 +45,54 @@ class DefaultTemplate(Scene):
         arrowright= Arrow(start=robotBody.get_bottom()+DOWN*0.5,end=robotBody.get_top()+UP*0.5).shift(RIGHT*2) 
         self.play(Create(arrowleftdbl), Create(arrowrightdbl))
         self.pause(2)
-        self.play(FadeOut(arrowleftdbl), FadeOut(arrowrightdbl), FadeIn(arrowleft),FadeIn(arrowright))
-        self.play(robot.animate.shift(UP))
-        self.play(Rotate(robot,PI/2))
+        self.play(FadeOut(arrowleftdbl,arrowrightdbl), FadeIn(arrowleft,arrowright))
+        self.pause(0.1)
+        self.play(robot.animate.shift(UP),arrowright.animate.shift(UP),arrowleft.animate.shift(UP))
+        self.play(arrowright.animate.flip(LEFT))
+        self.play(Rotate(robot,-PI/2), Rotate(arrowleft,-PI/2,about_point=robot.get_center()), Rotate(arrowright,-PI/2,about_point=robot.get_center()),run_time = 2,rate_func = linear)
+        self.play(FadeOut(arrowleft,arrowright))
         self.pause(2)
+        
+        
+        p1 = robot.get_center()
+        p2 = p1 + [8, 0, 0]
+        p4 = np.array([0, -8, 0])  
+        p3 = p4 + [0,4, 0]
+        bezier = CubicBezier(p1, p2, p3, p4)
+        #self.play(Create(bezier))
+        
+        # Tracker for time along the curve
+        t = ValueTracker(0)
+        prev_angle = [0]
+        # Define updater: move + rotate using TangentLine
+        def update_robot(mob):
+            alpha = t.get_value()
+
+            # Get position on curve
+            pos = bezier.point_from_proportion(alpha)
+
+            # Use TangentLine to get direction vector
+            tangent_line = TangentLine(bezier, alpha=alpha)
+            direction = tangent_line.get_unit_vector()
+
+            # Calculate angle from vector
+            angle = angle_of_vector(direction)
+            delta = angle - prev_angle[0]
+            prev_angle[0] = angle
+            # Move and rotate robot (adjust if robot "faces" up)
+            mob.move_to(pos)
+            mob.rotate(delta)  # Adjust because robot faces UP
+
+        # Add the updater
+        robot.add_updater(update_robot)
+        
+        # Animate from t = 0 to 1
+        self.play(t.animate.set_value(1), run_time=3)
+
+        # Optional: stop updating
+        robot.clear_updaters()
+        self.wait()
+
         # bezier curve
         # p1 = np.array([-3, 1, 0]) 
         # p2 = p1 + [2, 0, 0] 
