@@ -39,15 +39,15 @@ class DefaultTemplate(Scene):
         self.play(Create(robotBody), Create(wheel1), Create(wheel2), Create(wheel3), Create(wheel4), run_time = 2)
         #self.play(Transform(title[8].flip(LEFT),robotBody))
         self.pause(2)
-        arrowleft = DoubleArrow(start=robotBody.get_bottom()+DOWN*0.5,end=robotBody.get_top()+UP*0.5).shift(LEFT*2)
-        arrowright= DoubleArrow(start=robotBody.get_bottom()+DOWN*0.5,end=robotBody.get_top()+UP*0.5).shift(RIGHT*2)
-        self.play(Create(arrowleft), Create(arrowright))
+        arrowleftdbl = DoubleArrow(start=robotBody.get_bottom()+DOWN*0.5,end=robotBody.get_top()+UP*0.5).shift(LEFT*2)
+        arrowrightdbl= DoubleArrow(start=robotBody.get_bottom()+DOWN*0.5,end=robotBody.get_top()+UP*0.5).shift(RIGHT*2)
+        arrowleft = Arrow(start=robotBody.get_bottom()+DOWN*0.5,end=robotBody.get_top()+UP*0.5).shift(LEFT*2)
+        arrowright= Arrow(start=robotBody.get_bottom()+DOWN*0.5,end=robotBody.get_top()+UP*0.5).shift(RIGHT*2) 
+        self.play(Create(arrowleftdbl), Create(arrowrightdbl))
         self.pause(2)
-        self.play(FadeOut(arrowleft), FadeOut(arrowright))
+        self.play(FadeOut(arrowleftdbl), FadeOut(arrowrightdbl), FadeIn(arrowleft),FadeIn(arrowright))
         self.play(robot.animate.shift(UP))
-        self.play(Rotate(robot,-PI/2))
-        
-        
+        self.play(Rotate(robot,PI/2))
         self.pause(2)
         # bezier curve
         # p1 = np.array([-3, 1, 0]) 
