@@ -140,20 +140,39 @@ class DefaultTemplate(Scene):
         bezier.target.become(CubicBezier(p1,d2.target.get_center(),d3.target.get_center(),p4))
         self.play(MoveToTarget(d2),MoveToTarget(d3),MoveToTarget(bezier))
         self.pause()
+        
+        d1.generate_target()
+        d4.generate_target()
+        d1.target.shift(LEFT + DOWN)
+        d4.target.shift( UP+RIGHT)
+        
+        bezier.target.become(CubicBezier(d1.target.get_center(),d2.get_center(),d3.get_center(),d4.target.get_center()))
+        self.play(MoveToTarget(d1),MoveToTarget(d4),MoveToTarget(bezier))
+        self.pause()
+        
+        
         self.play(FadeOut(bezierText))
         
         #explain end pointsa nd control
         factor = 3
-        endpointsText = Text("End Points").shift(UP*3)
+        endpointsText = Text("Anchor/End Points").shift(UP*3)
         self.play(Write(endpointsText))
         self.play(ScaleInPlace(d1,factor),ScaleInPlace(d4,factor),run_time = 0.5)
         self.play(ScaleInPlace(d1,1/factor),ScaleInPlace(d4,1/factor),run_time = 0.5)
         self.play(FadeOut(endpointsText))
-        controlpointsText = Text("Control Points").shift(UP*3)
+        controlpointsText = Text("Handle Points").shift(UP*3)
         self.play(Write(controlpointsText))
         self.play(ScaleInPlace(d2,factor),ScaleInPlace(d3,factor),run_time = 0.5)
         self.play(ScaleInPlace(d2,1/factor),ScaleInPlace(d3,1/factor),run_time = 0.5)
+        self.play(FadeOut(controlpointsText))
+        
+        
+        l1b = Line(d1.get_center(),d2.get_center(), stroke_width = 20).set_color(GRAY)
+        l3b = Line(d3.get_center(),d4.get_center(), stroke_width = 20).set_color(GRAY)
+        self.play(Transform(l1,l1b),Transform(l3,l3b))
+        self.play(Transform(l1b,l1),Transform(l3b,l3))
         self.pause()
+
         # change bezier curve
         
         
