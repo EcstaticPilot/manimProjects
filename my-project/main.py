@@ -36,7 +36,7 @@ class DefaultTemplate(Scene):
         wheel3 = Rectangle(height=1,width=0.5).align_to(robotBody,RIGHT).align_to(robotBody,UP)  .shift(RIGHT * 0.5).set_fill(GRAY,opacity=0.25)
         wheel4 = Rectangle(height=1,width=0.5).align_to(robotBody,RIGHT).align_to(robotBody,DOWN).shift(RIGHT * 0.5).set_fill(GRAY,opacity=0.25)
         robot = Group(robotBody,wheel1,wheel2,wheel3,wheel4)
-        self.play(Create(robotBody), Create(wheel1), Create(wheel2), Create(wheel3), Create(wheel4), run_time = 2)
+        self.play(Write(robotBody), Write(wheel1), Write(wheel2), Write(wheel3), Write(wheel4), run_time = 2)
         #self.play(Transform(title[8].flip(LEFT),robotBody))
         self.pause(2)
         arrowleftdbl = DoubleArrow(start=robotBody.get_bottom()+DOWN*0.5,end=robotBody.get_top()+UP*0.5).shift(LEFT*2)
@@ -115,7 +115,7 @@ class DefaultTemplate(Scene):
         l2.add_updater(lambda x: x.become(Line(d2.get_center(), d3.get_center()).set_color(GRAY)))
         l3.add_updater(lambda x: x.become(Line(d3.get_center(), d4.get_center()).set_color(GRAY)))
         self.pause(2)
-        factor = 1.5
+        factor = 2
         self.play(ScaleInPlace(d1,factor),ScaleInPlace(d2,factor),ScaleInPlace(d3,factor),ScaleInPlace(d4,factor),run_time = 0.5)
         self.play(ScaleInPlace(d1,1/factor),ScaleInPlace(d2,1/factor),ScaleInPlace(d3,1/factor),ScaleInPlace(d4,1/factor),run_time = 0.5)
         self.pause(1)
