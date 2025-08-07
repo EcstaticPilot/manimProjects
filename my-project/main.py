@@ -169,8 +169,15 @@ class DefaultTemplate(Scene):
         
         l1b = Line(d1.get_center(),d2.get_center(), stroke_width = 20).set_color(GRAY)
         l3b = Line(d3.get_center(),d4.get_center(), stroke_width = 20).set_color(GRAY)
-        self.play(Transform(l1,l1b),Transform(l3,l3b))
-        self.play(Transform(l1b,l1),Transform(l3b,l3))
+        tangentText = Text("Tangent Lines").shift(UP*3)
+        self.play(Write(tangentText))
+        d1.set_z_index(l1b.z_index+1)
+        d2.set_z_index(l1b.z_index+1)
+        d3.set_z_index(l3b.z_index+1)
+        d3.set_z_index(l3b.z_index+1)
+        self.play(Transform(l1,l1b),Transform(l3,l3b), run_time = 0.5)
+        self.play(Transform(l1b,l1),Transform(l3b,l3), run_time = 0.5)
+        self.play(FadeOut(tangentText))
         self.pause()
 
         # change bezier curve
