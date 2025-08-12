@@ -91,6 +91,7 @@ class DefaultTemplate(Scene):
 
         # Optional: stop updating
         robot.clear_updaters()
+        
         self.play(FadeOut(questionText))
         self.wait(3)
 
@@ -179,7 +180,38 @@ class DefaultTemplate(Scene):
         self.play(Transform(l1b,l1),Transform(l3b,l3), run_time = 0.5)
         self.play(FadeOut(tangentText))
         self.pause()
-
+        self.remove(l1b,l3b)
+        d1.target.shift(DOWN*3 + LEFT)
+        d2.target.shift(UP*2+LEFT*3)
+        d3.target.shift(DOWN)
+        d4.target.shift(RIGHT*3+DOWN)
+        bezier.target.become(CubicBezier(d1.target.get_center(),d2.target.get_center(),d3.target.get_center(),d4.target.get_center()))
+        self.play(MoveToTarget(d1),MoveToTarget(d2),MoveToTarget(d3),MoveToTarget(d4),MoveToTarget(bezier))
+        self.pause()
+        # l2b = Line(d2.get_center(),d3.get_center()).set_color(GRAY)
+        # self.add(l2b)
+        # self.remove(l1,l2,l3)
+        l1.clear_updaters()
+        l2.clear_updaters()
+        l3.clear_updaters()
+        self.play(Uncreate(l1),Uncreate(l2),Uncreate(l3),Uncreate(d1),Uncreate(d2),Uncreate(d3),Uncreate(d4))
+        
+        self.pause()
+        #robot.scale(0.5)
+        robot.move_to(bezier.point_from_proportion(0.30))
+        tangentAngle  = TangentLine(bezier, alpha=0.30).get_unit_vector()
+        robot.shift(2*tangentAngle[1]*LEFT + 2*tangentAngle[0]*UP)
+        print(tangentAngle[0])
+        print(tangentAngle[1])
+        print(tangentAngle[2])
+        robot.rotate(-PI/3)
+        self.play(Write(robotBody), Write(wheel1), Write(wheel2), Write(wheel3), Write(wheel4))
+        
+        self.pause()
+        tangent = TangentLine(bezier, alpha=0.30)
+        crosstrack = Line(robot.get_center(),bezier.point_from_proportion(0.30))
+        self.play(Write(crosstrack))
+        self.play(Write(tangent))
         # change bezier curve
         
         
