@@ -16,7 +16,8 @@ convert ackermann to differential
 
 
 class DefaultTemplate(Scene):
-    def construct(self):
+    
+    def intro(self):
         #self.add(NumberPlane().add_coordinates())
 
         #test2 = CubicBezier([0,0,0],[1,0,0],[0,1,0],[1,1,1],)
@@ -29,6 +30,10 @@ class DefaultTemplate(Scene):
         self.pause(2)
         self.play(FadeOut(title,name))
         self.pause(1)
+        
+    def construct(self):
+        
+        self.intro()
         
         robotBody = Rectangle(height = 3, width=1.5).set_fill(GRAY,opacity=0.25)
         wheel1 = Rectangle(height=1,width=0.5).align_to(robotBody,LEFT) .align_to(robotBody,UP)  .shift(LEFT * 0.5) .set_fill(GRAY,opacity=0.25)
@@ -208,10 +213,11 @@ class DefaultTemplate(Scene):
         self.play(Write(robotBody), Write(wheel1), Write(wheel2), Write(wheel3), Write(wheel4))
         
         self.pause()
-        tangent = TangentLine(bezier, alpha=0.30)
-        crosstrack = Line(robot.get_center(),bezier.point_from_proportion(0.30))
-        self.play(Write(crosstrack))
+        tangent = TangentLine(bezier, alpha=0.30,length = 5)
+        crosstrack = Line(robot.get_center(),bezier.point_from_proportion(0.30)).flip(LEFT).flip(UP)
         self.play(Write(tangent))
+        self.play(Write(crosstrack))
+        self.play(tangent.animate.shift(tangentAngle*2.5))
         # change bezier curve
         
         
