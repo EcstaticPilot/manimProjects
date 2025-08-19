@@ -75,7 +75,6 @@ class DefaultTemplate(Scene):
 
             # Get position on curve
             pos = bezier.point_from_proportion(alpha)
-
             # Use TangentLine to get direction vector
             tangent_line = TangentLine(bezier, alpha=alpha)
             direction = tangent_line.get_unit_vector()
@@ -98,8 +97,10 @@ class DefaultTemplate(Scene):
         robot.clear_updaters()
         
         self.play(FadeOut(questionText))
+        self.clear()
         self.wait(3)
-
+        
+        
         #* bezier curve
         p1 = np.array([-3, 1, 0]) 
         p2 = p1 + [2, 0, 0] 
@@ -209,15 +210,33 @@ class DefaultTemplate(Scene):
         print(tangentAngle[0])
         print(tangentAngle[1])
         print(tangentAngle[2])
-        robot.rotate(-PI/3)
+        robot.rotate(-PI/4)
         self.play(Write(robotBody), Write(wheel1), Write(wheel2), Write(wheel3), Write(wheel4))
         
         self.pause()
-        tangent = TangentLine(bezier, alpha=0.30,length = 5)
-        crosstrack = Line(robot.get_center(),bezier.point_from_proportion(0.30)).flip(LEFT).flip(UP)
-        self.play(Write(tangent))
-        self.play(Write(crosstrack))
-        self.play(tangent.animate.shift(tangentAngle*2.5))
+        tangent = TangentLine(bezier, alpha=0.30,length = 4).set_color(RED)
+        tangentText = Text('Tangent Line').shift(RIGHT*4.5+UP*3).set_color(RED)
+        crosstrack = Line(robot.get_center(),bezier.point_from_proportion(0.30)).flip(LEFT).flip(UP).set_color(BLUE)
+        crosstrackText = Text('Cross Track Error').set_color(BLUE).shift(RIGHT*4+UP*2)
+        #LDdimension  = DoubleArrow(tip_shape_end = BarTip)
+        self.play(Create(tangent),Write(tangentText))
+        self.pause()
+        self.play(Create(crosstrack),Write(crosstrackText))
+        self.play(tangent.animate.shift(tangentAngle*2))
+        robotHeadingLine = Line(robot.get_center(),robot.get_center()+UP*2+RIGHT*2)
+        self.play(Create(robotHeadingLine))
+        
+        LDline = Line(crosstrack.get_end(),tangent.get_end()).set_color(YELLOW)
+        self.play(Create(LDline))
+        arc1 = Arc(1,PI/4,angle_of_vector(tangentAngle)-PI/4,arc_center=robot.get_center()).set_color(GREEN)
+        
+        self.play(tangent.animate.move_to(robot.get_center()+2*tangentAngle))
+        self.play(Create(arc1))
+        self.play(crosstrack.animate.shift(tangentAngle * 4))
+        
+        arc2 = Arc(1,angle_of_vector(tangentAngle),angle_of_vector(LDline.get_unit_vector())-angle_of_vector(tangentAngle), arc_center=robot.get_center()).set_color(PURPLE)
+        self.play(Create(arc2))
+        self.pause()
         # change bezier curve
         
         
