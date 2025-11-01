@@ -34,7 +34,7 @@ class DefaultTemplate(Scene):
     def construct(self):
         
         self.intro()
-        
+
         robotBody = Rectangle(height = 3, width=1.5).set_fill(GRAY,opacity=0.25)
         wheel1 = Rectangle(height=1,width=0.5).align_to(robotBody,LEFT) .align_to(robotBody,UP)  .shift(LEFT * 0.5) .set_fill(GRAY,opacity=0.25)
         wheel2 = Rectangle(height=1,width=0.5).align_to(robotBody,LEFT) .align_to(robotBody,DOWN).shift(LEFT * 0.5) .set_fill(GRAY,opacity=0.25)
@@ -68,6 +68,7 @@ class DefaultTemplate(Scene):
         
         # Tracker for time along the curve
         t = ValueTracker(0)
+        
         prev_angle = [0]
         # Define updater: move + rotate using TangentLine
         def update_robot(mob):
@@ -89,7 +90,7 @@ class DefaultTemplate(Scene):
 
         # Add the updater
         robot.add_updater(update_robot)
-        
+    
         # Animate from t = 0 to 1
         self.play(t.animate.set_value(1), run_time=3)
 
@@ -237,6 +238,26 @@ class DefaultTemplate(Scene):
         arc2 = Arc(1,angle_of_vector(tangentAngle),angle_of_vector(LDline.get_unit_vector())-angle_of_vector(tangentAngle), arc_center=robot.get_center()).set_color(PURPLE)
         self.play(Create(arc2))
         self.pause()
+        all_mobjects = Group(*self.mobjects)  # Create a group of all mobjects
+    #     for mobject in all_mobjects:
+    #         if(mobject.name == 'Text'):
+    #             #all_mobjects.remove(mobject)
+    #    # all_Text = Group(tangentText,crosstrackText)
+        self.play(Rotate(all_mobjects, angle=PI/4, about_point=ORIGIN), run_time=2)
+        self.pause()
+        self.play(all_mobjects.animate.shift(ORIGIN-robot.get_center_of_mass()),run_time=2)
+        self.pause()
+        self.play(FadeOut(bezier))
+        arc2.generate_target()
+        arc2.target.start_angle = -PI/4
+        arc3 = Arc(1,PI/2,-PI/2+angle_of_vector(LDline.get_unit_vector()),arc_center=robot.get_center()).set_color(BLUE)
+        
+        LDline.generate_target()
+        LDline.target =Line(robot.get_center(),  robot.get_center() + 2*LDline.get_unit_vector()).set_color(YELLOW)
+        
+        self.play(Create(arc3), MoveToTarget(LDline), FadeOut(arc1,arc2,crosstrack,tangent))
+        self.pause()
+        self.play(arc3.animate.shift(0.75*UP),robotHeadingLine.animate.shift(0.75*UP), LDline.animate.shift(0.75*UP),robot.animate.shift(0.75*DOWN))
         # change bezier curve
         
         
