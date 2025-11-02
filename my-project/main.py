@@ -1,4 +1,5 @@
 from manim import *
+import math
 """
 script idea
 
@@ -243,9 +244,9 @@ class DefaultTemplate(Scene):
     #         if(mobject.name == 'Text'):
     #             #all_mobjects.remove(mobject)
     #    # all_Text = Group(tangentText,crosstrackText)
-        self.play(Rotate(all_mobjects, angle=PI/4, about_point=ORIGIN), run_time=2)
+        self.play(all_mobjects.animate.shift(ORIGIN-robot.get_center_of_mass()), run_time=2)
         self.pause()
-        self.play(all_mobjects.animate.shift(ORIGIN-robot.get_center_of_mass()),run_time=2)
+        self.play(Rotate(all_mobjects, angle=PI/4, about_point=ORIGIN),run_time=2)
         self.pause()
         self.play(FadeOut(bezier))
         arc2.generate_target()
@@ -257,7 +258,32 @@ class DefaultTemplate(Scene):
         
         self.play(Create(arc3), MoveToTarget(LDline), FadeOut(arc1,arc2,crosstrack,tangent))
         self.pause()
-        self.play(arc3.animate.shift(0.75*UP),robotHeadingLine.animate.shift(0.75*UP), LDline.animate.shift(0.75*UP),robot.animate.shift(0.75*DOWN))
+        self.play(Group(LDline,robotHeadingLine,arc3).animate.shift(UP*1))
+        center = (arc3.get_arc_center()[1]/math.cos(angle_of_vector(LDline.get_unit_vector())+PI/2) * LEFT)
+        centerpt = Dot(center)
+        line1 = Line(arc3.get_arc_center(),center)
+        #delta y/cos
+        self.pause()
+        self.play(Create(line1),Create(centerpt))
+        leftCircle = Circle(2.25).shift(center).set_color(ORANGE)
+        RightCircle = Circle(0.5).shift(center).set_color(PURPLE)
+        leftText = Text("Left Circle").set_color(ORANGE).shift(5*RIGHT+3*UP)
+        rightText = Text("Right Circle").set_color(PURPLE).shift(5*RIGHT+2*UP)
+        self.play(Create(leftCircle),Create(RightCircle), Write(leftText), Write(rightText))
+        self.pause()
+        eqtest = Tex(r"$\frac{v_{l} } {v_{r} }\sim \frac{r_{l}}{ {r_{r} } } =$",r"$\frac{2\pi(r+\frac{w}{2})}{2\pi(r-\frac{w}{2})}$").shift(LEFT*5 + UP)
+        eq2 = Tex(r"$\frac{v_{l} } {v_{r} }\sim \frac{r_{l}}{ {r_{r} } } =$",r"$\frac{2 \pi r (1+\frac{w}{2r})}{2 \pi r (1-\frac{w}{2r})}$").align_to(eqtest,LEFT).align_to(eqtest,UP)
+        eq3 = Tex(r"$\frac{v_{l} } {v_{r} }\sim \frac{r_{l}}{ {r_{r} } } =$",r"$\frac{ (1+\frac{w}{2r})}{ (1-\frac{w}{2r})}$").align_to(eqtest,LEFT).align_to(eqtest,UP)
+        eq4 = Tex(r"$v_{l}=$",r"$ v(1+\frac{w}{2r})$").align_to(eqtest,LEFT).align_to(eqtest,UP).shift(DOWN)
+        eq5 = Tex(r"$v_{r}=$",r"$ v(1-\frac{w}{2r})$").align_to(eqtest,LEFT).align_to(eqtest,UP).shift(2*DOWN)
+        self.play(Write(eqtest))
+        self.pause()
+        self.play(Transform(eqtest[1],eq2[1]))
+        self.pause()
+        self.play(Transform(eqtest[1],eq3[1]))
+        self.pause()
+        self.play(TransformFromCopy(eqtest,eq4))
+        self.play(TransformFromCopy(eqtest,eq5))
         # change bezier curve
         
         
