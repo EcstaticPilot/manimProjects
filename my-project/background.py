@@ -6,6 +6,7 @@ DIAG2 = LEFT*math.sqrt(3)/2 + DOWN*0.5
 DIAG2P = DOWN*math.sqrt(3)/2 + RIGHT*0.5
 config.frame_size = (1080, 1920)
 SCALE = 1
+RUN_TIME = 0.2
 class DefaultTemplate(Scene):
 
     
@@ -14,7 +15,7 @@ class DefaultTemplate(Scene):
         buffer:list[Animation] = []
         for e in vmobjects:
             buffer.append(Write(e))
-        self.play(*buffer)
+        self.play(*buffer,run_time = RUN_TIME)
         
     def triangleExists(self, list, triangle:Triangle):
         for e in list:
@@ -22,15 +23,18 @@ class DefaultTemplate(Scene):
                 return True
         return False
     def generateTriangles(self,t:Triangle,up:bool):
-        newT = t.copy().rotate(PI,about_point=t.get_center_of_mass())
+        #newT = t.copy().rotate(PI,about_point=t.get_center_of_mass())
         if up:
-            return [newT.copy().shift(DIAG1*SCALE),newT.copy().rotate(4*PI/3,about_point=t.get_center_of_mass()).shift(-DIAG2*SCALE),newT.copy().rotate(2*PI/3,about_point=t.get_center_of_mass()).shift(DOWN*SCALE)]      
+            newT = Triangle(color = ORANGE).scale(SCALE).move_to(t.get_center())
+            newT.rotate(PI,about_point=newT.get_center_of_mass())
+            return [newT.copy().shift(DIAG1*SCALE),newT.copy().rotate(4*PI/3,about_point=t.get_center_of_mass()).shift(-DIAG2*SCALE),newT.copy().rotate(2*PI/3,about_point=t.get_center_of_mass()).shift(DOWN*SCALE)]
+              
+        newT = Triangle(color = ORANGE).scale(SCALE).rotate(PI).move_to(t.get_center())
+        newT.rotate(-PI,about_point=newT.get_center_of_mass())       
         return [newT.copy().rotate(4*PI/3,about_point=t.get_center_of_mass()).shift(UP*SCALE),newT.copy().rotate(2*PI/3,about_point=t.get_center_of_mass()).shift(-DIAG1*SCALE),newT.copy().shift(DIAG2*SCALE)]                 
+    
+    
     def construct(self):
-        
-
-
-        
         #start2 = start.copy().flip(RIGHT).shift(UP*0.76)
         #start2 = start.copy().flip(RIGHT).shift(RIGHT*0.42)
         
@@ -46,10 +50,10 @@ class DefaultTemplate(Scene):
         frontier:list[Triangle] = []
         
         start = Triangle(color=ORANGE).scale(SCALE)
+        start2 = start.copy().rotate(PI)
         existing.append(start)
         frontier.append(start)
-        self.play(Write(start))
-        
+        self.play(Write(start),run_time = RUN_TIME)
         flag = True
         
         for _ in range(20):
@@ -61,4 +65,5 @@ class DefaultTemplate(Scene):
             self.SimultaneousWrite(buffer)
             frontier = buffer
             flag = not flag
+        self.pause(5)
                         
