@@ -6,7 +6,7 @@ DIAG2 = LEFT*math.sqrt(3)/2 + DOWN*0.5
 DIAG2P = DOWN*math.sqrt(3)/2 + RIGHT*0.5
 config.frame_size = (1080, 1920)
 SCALE = 1
-RUN_TIME = 0.2
+RUN_TIME = 0.1
 class DefaultTemplate(Scene):
 
     
